@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Формы и валидация</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Формы, валидация и регулярные выражения</h1>
+    
+    <div class="container">
+        <!-- ЗАДАНИЕ 1: Получение данных из форм -->
+        <section class="form-section">
+            <h2>Задание 1: Получение данных из форм</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="name">Имя:</label>
+                    <input type="text" id="name" name="name" placeholder="Введите ваше имя">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Введите ваш email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Пол:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="male"> Мужской</label>
+                        <label><input type="radio" name="gender" value="female"> Женский</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Интересы:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="interests" value="sports"> Спорт</label>
+                        <label><input type="checkbox" name="interests" value="music"> Музыка</label>
+                        <label><input type="checkbox" name="interests" value="reading"> Чтение</label>
+                        <label><input type="checkbox" name="interests" value="travel"> Путешествия</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">Страна:</label>
+                    <select id="country" name="country">
+                        <option value="">Выберите страну</option>
+                        <option value="ru">Россия</option>
+                        <option value="by">Беларусь</option>
+                        <option value="de">Германия</option>
+                        <option value="fr">Франция</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Сообщение:</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Введите ваше сообщение"></textarea>
+                </div>
+                
+                <button type="button" id="getDataBtn">Получить данные</button>
+            </form>
+            
+            <div class="output" id="formOutput">
+                Данные формы появятся здесь после нажатия кнопки
+            </div>
+        </section>
+        
+        <!-- ЗАДАНИЕ 2: Валидация форм -->
+        <section class="validation-section">
+            <h2>Задание 2: Валидация форм</h2>
+            
+            <h3>HTML5 валидация</h3>
+            <form id="html5Form">
+                <div class="form-group">
+                    <label for="requiredField">Обязательное поле:</label>
+                    <input type="text" id="requiredField" name="requiredField" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="emailField">Email (HTML5):</label>
+                    <input type="email" id="emailField" name="emailField" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneField">Телефон (паттерн):</label>
+                    <input type="tel" id="phoneField" name="phoneField" pattern="\+375\s?[0-9]{2}\s?[0-9]{3}\s?[0-9]{2}\s?[0-9]{2}" placeholder="+375 33 333 33 33">
+                </div>
+                
+                <button type="submit">Проверить (HTML5)</button>
+            </form>
+            
+            <h3>JavaScript валидация</h3>
+            <form id="jsForm">
+                <div class="form-group">
+                    <label for="jsName">Имя:</label>
+                    <input type="text" id="jsName" name="jsName">
+                    <div class="error" id="nameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jsEmail">Email:</label>
+                    <input type="text" id="jsEmail" name="jsEmail">
+                    <div class="error" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jsPassword">Пароль (мин. 8 символов):</label>
+                    <input type="password" id="jsPassword" name="jsPassword">
+                    <div class="error" id="passwordError"></div>
+                </div>
+                
+                <button type="button" id="validateBtn">Проверить (JS)</button>
+            </form>
+            
+            <div class="output" id="validationOutput">
+                Результаты валидации появятся здесь
+            </div>
+        </section>
+    </div>
+    
+    <!-- ЗАДАНИЕ 3: Регулярные выражения -->
+    <section class="regex-section">
+        <h2>Задание 3: Регулярные выражения</h2>
+        
+        <div class="regex-example">
+            <h3>Метод test()</h3>
+            <p>Проверка соответствия строки шаблону email:</p>
+            <input type="text" id="testInput" placeholder="Введите email для проверки">
+            <button id="testBtn">Проверить (test)</button>
+            <div class="regex-result" id="testResult"></div>
+        </div>
+        
+        <div class="regex-example">
+            <h3>Метод exec()</h3>
+            <p>Поиск всех совпадений в тексте:</p>
+            <textarea id="execText" rows="3" placeholder="Введите текст с email адресами">Контакты: user1@example.com, user2@test.org, user3@domain.com, user4@gmailcom, user5@gmail.com</textarea>
+            <button id="execBtn">Найти email (exec)</button>
+            <div class="regex-result" id="execResult"></div>
+        </div>
+        
+        <div class="regex-example">
+            <h3>Метод match()</h3>
+            <p>Поиск всех чисел в тексте:</p>
+            <textarea id="matchText" rows="3" placeholder="Введите текст с числами">У меня 5 яблок, 3 апельсина и 12 бананов.</textarea>
+            <button id="matchBtn">Найти числа (match)</button>
+            <div class="regex-result" id="matchResult"></div>
+        </div>
+        
+        <div class="regex-example">
+            <h3>Метод search()</h3>
+            <p>Поиск позиции первого совпадения:</p>
+            <input type="text" id="searchText" placeholder="Введите текст">
+            <input type="text" id="searchPattern" placeholder="Введите шаблон для поиска">
+            <button id="searchBtn">Найти позицию (search)</button>
+            <div class="regex-result" id="searchResult"></div>
+        </div>
+        
+        <div class="regex-example">
+            <h3>Метод replace()</h3>
+            <p>Замена всех цифр на символ 'X':</p>
+            <textarea id="replaceText" rows="3" placeholder="Введите текст с цифрами">Мой номер телефона: +375 (33) 456-78-90</textarea>
+            <button id="replaceBtn">Заменить цифры (replace)</button>
+            <div class="regex-result" id="replaceResult"></div>
+        </div>
+        
+        <div class="regex-example">
+            <h3>Метод split()</h3>
+            <p>Разделение текста по различным разделителям:</p>
+            <textarea id="splitText" rows="3" placeholder="Введите текст для разделения">Яблоки, апельсины; бананы. Груши</textarea>
+            <button id="splitBtn">Разделить (split)</button>
+            <div class="regex-result" id="splitResult"></div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

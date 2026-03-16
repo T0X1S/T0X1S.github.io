@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gomoku - Five in a Row</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .player-turn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-indicator {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .player1-indicator {
+            background-color: yellow;
+            border: 2px solid #d4b300;
+        }
+        
+        .player2-indicator {
+            background-color: green;
+            border: 2px solid #006400;
+        }
+        
+        .current-player {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #game {
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            background-color: #deb887;
+        }
+        
+        #game td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #8b4513;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #game td:hover {
+            background-color: rgba(222, 184, 135, 0.7);
+        }
+        
+        #game td.gamer1 {
+            background: radial-gradient(circle, yellow 60%, #d4b300 100%);
+        }
+        
+        #game td.gamer2 {
+            background: radial-gradient(circle, green 60%, #006400 100%);
+        }
+        
+        #game td.winner {
+            border: 3px solid red;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { border-color: red; }
+            50% { border-color: #ff6b6b; }
+            100% { border-color: red; }
+        }
+        
+        .game-status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .winner-message {
+            color: #e74c3c;
+            animation: celebrate 1.5s infinite;
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #game td {
+                width: 25px;
+                height: 25px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #game td {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Gomoku - Five in a Row</h1>
+        
+        <div class="game-info">
+            <div class="player-turn">
+                <span>Current Player:</span>
+                <span class="player-indicator player1-indicator"></span>
+                <span class="current-player">Player 1</span>
+            </div>
+            
+            <div class="controls">
+                <button id="restart">Restart Game</button>
+            </div>
+        </div>
+        
+        <div id="game"></div>
+        
+        <div class="game-status" id="gameStatus">
+            Player 1's turn - Place your yellow piece
+        </div>
+    </div>
+
+    <script>
+        class Field {
+            constructor(selector, rowsNum, colsNum) {
+                this._gameEnd = false; // _ префикс - приватное поле
+                
+                this._field = document.querySelector(selector);
+                this._colsNum = colsNum;
+                this._rowsNum = rowsNum;
+                
+                this._dots = new Dots; //создание объекта
+                this._html = new HTML; //создание объекта
+                this._queue = new Queue(['gamer1', 'gamer2']); //создание объекта
+                
+                this._html.createTable(this._field, this._rowsNum, this._colsNum);
+                this._updateGameStatus();
+                this._run();
+            }
+            
+            _run() {    // _ префикс - приватный метод
+                this._field.addEventListener('click', (event) => {
+                    let cell = event.target.closest('td:not(.gamer1):not(.gamer2)');
+                
+                    if (!this._gameEnd && cell) {
+                        let col = this._html.getPrevSiblingsNum(cell);
+                        let row = this._html.getPrevSiblingsNum(cell.parentElement);
+                        
+                        let gamer = this._queue.getGamer();
+                        let dot = new Dot(gamer, cell, row, col, this._dots);
+                        this._dots.add(dot, row, col);
+                        
+                        let winLine = this._checkWin(dot);
+                        if (winLine) {
+                            this._win(winLine);
+                        } else {
+                            this._queue.next(); // собственное поле
+                            this._updateGameStatus(); // вызов собственного метода
+                        }
+                    }
+                });
+                
+                // Add restart button functionality
+                document.getElementById('restart').addEventListener('click', () => {
+                    this._restartGame();
+                });
+            }
+            
+            _restartGame() {
+                // Clear the game board
+                this._field.innerHTML = '';
+                this._dots = new Dots;
+                this._queue = new Queue(['gamer1', 'gamer2']);
+                this._gameEnd = false;
+                
+                // Recreate the table
+                this._html.createTable(this._field, this._rowsNum, this._colsNum);
+                this._updateGameStatus();
+            }
+            
+            _updateGameStatus() {
+                const gameStatus = document.getElementById('gameStatus');
+                const currentPlayer = this._queue.getGamer() === 'gamer1' ? 'Player 1' : 'Player 2';
+                const playerColor = this._queue.getGamer() === 'gamer1' ? 'yellow' : 'green';
+                // Разное поведение в зависимости от состояния (пример условного полиморфного поведения)
+                
+                if (!this._gameEnd) {
+                    gameStatus.innerHTML = `${currentPlayer}'s turn - Place your ${playerColor} piece`;
+                    gameStatus.className = 'game-status';
+                }
+                
+                // Update player indicator
+                const playerIndicator = document.querySelector('.player-indicator');
+                const currentPlayerElement = document.querySelector('.current-player');
+                
+                playerIndicator.className = `player-indicator ${this._queue.getGamer() === 'gamer1' ? 'player1-indicator' : 'player2-indicator'}`;
+                currentPlayerElement.textContent = currentPlayer;
+            }
+            
+            _win(winLine) {
+                this._gameEnd = true;
+                this._notifyWinnerCells(winLine);
+                
+                const gameStatus = document.getElementById('gameStatus');
+                const winner = this._queue.getGamer() === 'gamer1' ? 'Player 1 (Yellow)' : 'Player 2 (Green)';
+                gameStatus.innerHTML = `<span class="winner-message">${winner} wins! Congratulations!</span>`;
+                gameStatus.className = 'game-status winner-message';
+            }
+            
+            _notifyWinnerCells(winLine) {
+                winLine.forEach((dot) => {
+                    dot.becomeWinner();
+                });
+            }
+            
+            _checkWin(dot) {  // приватный метод
+                let dirs = [
+                    {deltaRow:  0, deltaCol: -1},  // horizontal
+                    {deltaRow: -1, deltaCol: -1},  // diagonal top-left to bottom-right
+                    {deltaRow: -1, deltaCol:  0},  // vertical
+                    {deltaRow: -1, deltaCol:  1},  // diagonal top-right to bottom-left
+                ];
+                
+                for (let i = 0; i < dirs.length; i++) {
+                    let line = this._checkLine(dot, dirs[i].deltaRow, dirs[i].deltaCol); // объект другого класса, но вызываются обственные методы
+                    
+                    if (line.length >= 5) {
+                        return line;
+                    }
+                };
+                
+                return false;
+            }
+            
+            _checkLine(dot, deltaRow, deltaCol) {
+                let dir1 = this._checkDir(dot,  deltaRow,  deltaCol);
+                let dir2 = this._checkDir(dot, -deltaRow, -deltaCol);
+                
+                return [].concat(dir1, [dot], dir2);
+            }
+            
+            _checkDir(dot, deltaRow, deltaCol) {
+                let result = [];
+                let neighbor = dot;
+                
+                while (true) {
+                    neighbor = neighbor.getNeighbor(deltaRow, deltaCol);
+                    
+                    if (neighbor) {
+                        result.push(neighbor);
+                    } else {
+                        return result;
+                    }
+                }
+            }
+        }
+
+        class Dots {
+            constructor() {
+                this._dots = {}; // ← ВНУТРЕННЯЯ СТРУКТУРА ДАННЫХ СКРЫТА
+            }
+             // ПУБЛИЧНЫЙ ИНТЕРФЕЙС - единственные способы работы с данными
+            add(dot, row, col) {
+                if (this._dots[row] === undefined) {
+                    this._dots[row] = {};
+                }
+                
+                this._dots[row][col] = dot;
+            }
+            
+            get(row, col) {
+                if (this._dots[row] && this._dots[row][col]) {
+                    return this._dots[row][col];
+                } else {
+                    return undefined;
+                }
+            }
+            // НЕТ доступа к this._dots извне! Нарушитель получит undefined
+        }
+
+        class Dot {
+            constructor(gamer, elem, row, col, dots) {
+                this._gamer = gamer;  // доступно наследникам (если бы было наследование)
+                this._elem = elem;
+                this._row = row;
+                this._col = col;
+                this._dots = dots;
+                
+                this._neighbors = {};
+                
+                this._findNeighbors();
+                this._notifyNeighbors();
+                this._reflect();
+            }
+            
+            getRow() { // публичный метод - вызывается из других классов
+                return this._row;
+            }
+            
+            getCol() {  // публичный метод
+                return this._col;
+            }
+            
+            becomeWinner() { // публичный метод
+                this._elem.classList.add('winner');
+            }
+            
+            getNeighbor(deltaRow, deltaCol) {
+                if (this._neighbors[deltaRow] !== undefined) {
+                    return this._neighbors[deltaRow][deltaCol];
+                } else {
+                    return undefined;
+                }
+            }
+            
+            addNeighbor(neighbor) {
+                let deltaRow = neighbor.getRow() - this._row;
+                let deltaCol = neighbor.getCol() - this._col;
+                
+                if (this._neighbors[deltaRow] === undefined) {
+                    this._neighbors[deltaRow] = {};
+                }
+                
+                this._neighbors[deltaRow][deltaCol] = neighbor;
+            }
+            
+            _findNeighbors() {
+                this._considerNeighbor(1, 1);
+                this._considerNeighbor(1, 0);
+                this._considerNeighbor(1, -1);
+                this._considerNeighbor(-1, 1);
+                this._considerNeighbor(-1, 0);
+                this._considerNeighbor(-1, -1);
+                this._considerNeighbor(0, 1);
+                this._considerNeighbor(0, -1);
+            }
+            
+            _considerNeighbor(deltaRow, deltaCol) {
+                let neighbor = this._dots.get(this._row + deltaRow, this._col + deltaCol);  // this._dots - объект класса Dots, вызывается его метод get()
+                
+                if (neighbor !== undefined && neighbor._belongsTo(this._gamer)) {
+                    this.addNeighbor(neighbor);
+                }
+            }
+            
+            _notifyNeighbors() {
+                for (let rowKey in this._neighbors) {
+                    for (let colKey in this._neighbors[rowKey]) {
+                        this._neighbors[rowKey][colKey].addNeighbor(this);
+                    }
+                }
+            }
+            
+            _reflect() {
+                this._elem.classList.add('gamer');
+                this._elem.classList.add(this._gamer);
+            }
+            
+            _belongsTo(gamer) {
+                return this._gamer == gamer;
+            }
+        }
+
+        class Queue {
+            constructor(gamers) {
+                this._gamers = gamers;
+                this._counter = new Counter(this._gamers.length);
+            }
+            
+            getGamer() {
+                return this._gamers[this._counter.get()];
+            }
+            
+            next() {
+                this._counter.next();
+            }
+        }
+
+        class Counter {
+            constructor(length) {
+                this._length = length;
+                this._counter = null;
+            }
+            
+            get() {
+                if (this._counter == null) {
+                    this._counter = 0;
+                }
+                
+                return this._counter;
+            }
+            
+            next() {
+                if (this._counter == null) {
+                    this._counter = 0;
+                } else {
+                    this._counter++;
+                    
+                    if (this._counter == this._length) {
+                        this._counter = 0;
+                    }
+                }
+                
+                return this._counter;
+            }
+        }
+
+        class HTML {
+            createTable(parent, rowsNum, colsNum) {
+                let table = document.createElement('table');
+                
+                for (let i = 0; i < rowsNum; i++) {
+                    let tr = document.createElement('tr');
+                    
+                    for (let j = 0; j < colsNum; j++) {
+                        let td = document.createElement('td');
+                        tr.appendChild(td);
+                    }
+                    
+                    table.appendChild(tr);
+                }
+                
+                parent.appendChild(table);
+            }
+            
+            getPrevSiblingsNum(elem) {
+                let prev = elem.previousSibling;
+                let i = 0;
+                
+                while (prev) {
+                    prev = prev.previousSibling;
+                    i++;
+                }
+                
+                return i;
+            }
+        }
+
+        new Field('#game', 15, 15); //созданиеса
+    </script>
+</body>
+</html>

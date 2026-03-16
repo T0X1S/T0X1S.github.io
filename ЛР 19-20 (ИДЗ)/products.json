@@ -1,0 +1,124 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Side Bowls",
+      "price": 45,
+      "currency": "$",
+      "description": "Hand-painted porcelain stackable bowls, designed for plating, eating, and scooping.",
+      "image": "images/item1.jpg",
+      "colors": ["#e09d81", "#cdc7b3", "#595752"],
+      "category": "tableware",
+      "inStock": true,
+      "rating": 4.5
+    },
+    {
+      "id": 2,
+      "name": "Drinking Glasses",
+      "price": 50,
+      "currency": "$",
+      "description": "Hand-made and stackable. Made from recycled glass and natural sand. Naturally colored, without dyes.",
+      "image": "images/item2.jpg",
+      "colors": ["#ccbd9e", "#b55900", "#5b653b", "#ffffff"],
+      "category": "tableware",
+      "inStock": true,
+      "rating": 4.8
+    },
+    {
+      "id": 3,
+      "name": "Main Plates",
+      "price": 50,
+      "currency": "$",
+      "description": "Hand-painted porcelain plates, stackable and designed for big appetites.",
+      "image": "images/item3.jpg",
+      "colors": ["#e09d81", "#cdc7b3", "#595752"],
+      "category": "tableware",
+      "inStock": true,
+      "rating": 4.6
+    },
+    {
+      "id": 4,
+      "name": "Always Pan",
+      "price": 145,
+      "currency": "$",
+      "description": "Thoughtfully designed to be the perfect size and shape to do the work of eight pieces of traditional cookware.",
+      "image": "images/item4.jpg",
+      "colors": ["#e09d81", "#748ea1", "#b76d47", "#7d836e", "#c33636", "#cdc7b3", "#595752", "#d3c2ca"],
+      "category": "cookware",
+      "inStock": true,
+      "rating": 4.9
+    },
+    {
+      "id": 5,
+      "name": "Serving Platter",
+      "price": 65,
+      "currency": "$",
+      "description": "Large ceramic serving platter perfect for family dinners and entertaining guests.",
+      "image": "images/item5.jpg",
+      "colors": ["#e09d81", "#cdc7b3"],
+      "category": "tableware",
+      "inStock": true,
+      "rating": 4.4
+    },
+    {
+      "id": 6,
+      "name": "Utensil Set",
+      "price": 35,
+      "currency": "$",
+      "description": "Eco-friendly bamboo utensil set including spoons, spatula, and tongs.",
+      "image": "images/item6.jpg",
+      "colors": ["#5b653b", "#595752"],
+      "category": "utensils",
+      "inStock": true,
+      "rating": 4.3
+    },
+    {
+      "id": 7,
+      "name": "Coffee Mugs",
+      "price": 40,
+      "currency": "$",
+      "description": "Set of 4 handcrafted ceramic coffee mugs with comfortable grips.",
+      "image": "images/item7.jpg",
+      "colors": ["#e09d81", "#748ea1", "#7d836e"],
+      "category": "tableware",
+      "inStock": true,
+      "rating": 4.7
+    },
+    {
+      "id": 8,
+      "name": "Cutting Board",
+      "price": 55,
+      "currency": "$",
+      "description": "Sustainable bamboo cutting board with juice groove and non-slip feet.",
+      "image": "images/item8.jpg",
+      "colors": ["#5b653b", "#595752"],
+      "category": "kitchen tools",
+      "inStock": true,
+      "rating": 4.5
+    },
+    {
+      "id": 9,
+      "name": "Salad Bowl Set",
+      "price": 75,
+      "currency": "$",
+      "description": "Nested salad bowls in three sizes, perfect for meal prep and serving.",
+      "image": "images/item9.jpg",
+      "colors": ["#e09d81", "#7d836e", "#cdc7b3"],
+      "category": "tableware",
+      "inStock": true,
+      "rating": 4.6
+    },
+    {
+      "id": 10,
+      "name": "Perfect Pot",
+      "price": 165,
+      "currency": "$",
+      "description": "Multi-functional pot that works as a Dutch oven, stock pot, and more.",
+      "image": "images/item10.jpg",
+      "colors": ["#e09d81", "#595752", "#c33636"],
+      "category": "cookware",
+      "inStock": true,
+      "rating": 4.8
+    }
+  ]
+}
